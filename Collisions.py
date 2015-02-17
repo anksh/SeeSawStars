@@ -3,9 +3,9 @@
 
 def collide(obj1, obj2, score, lives):
 	if pygame.sprite.collide_rect(obj1, obj2):
-		if type(obj1) is goodstar:
+		if obj2.attribute == "good":
 			#print True
 			score += 1
-		if type(obj1) is badstar:
+		if obj2.attribute == "bad":
 			lives -= 1
 			#print "The Goalie got his hands to that!"
