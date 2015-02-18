@@ -9,3 +9,4 @@ def collide(obj1, obj2, score, lives):
 		if obj2.attribute == "bad":
 			lives -= 1
 			#print "The Goalie got his hands to that!"
+		return True

@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import * 
-import PlayerStart
+import GameMech
 
 pygame.init()
 
@@ -29,7 +29,7 @@ def menu():
         if EndGame==2:
             location=pygame.mouse.get_pos()
             if location[0]>600and location[0]<800 and location[1]>400 and location[1]<600:
-                PlayerStart.play()
+                GameMech.play()
             menu()
  
 menu()       
