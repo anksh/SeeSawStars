@@ -100,15 +100,16 @@ def play():
     backgroundrec=background.get_rect() 
     seesaw=pygame.image.load("SeeSawHorizontal.png")
     seesawrec=seesaw.get_rect()
-    speed = 1
+    speed = 1.5
     GameOver = 0
     n = 1
-    morebstars = 5
+    morebstars = 7
     moreStars = 5
     gstars = []
     delList = []
     EndGame=0
-    gstars.append(stars((255,255,255),"star.png",[random.randrange(0,600),random.randrange(-150,-50)], "good"))
+    count = 0
+    gstars.append(stars((255,255,255),"star.png",[random.randrange(0,560),random.randrange(-150,-50)], "good"))
     gstars.append(stars((255,255,255),"star.png",[random.randrange(600,1160),random.randrange(-400,-50)], "good"))
     screen.blit(background,backgroundrec)
 
@@ -118,25 +119,27 @@ def play():
         global score   
         if lives == 0:
             EndGame = 1
-        scoretext="SCORE: "+str(score)
-        scorewrite=font.render(scoretext, 1, [0,0,0])
-    
-        livetext=str(lives)
-        liveswrite=font.render(livetext,1,[0,0,0])
+
+    	scoretext="SCORE: " + str(score)
+    	scorewrite=font.render(scoretext, 1, [0,0,0])
+    	
+    	livetext="LIVES: " + str(lives)
+    	liveswrite=font.render(livetext,1,[0,0,0])
+
 
         if score == n:
             speed += .25
             n+=5
         
         if score == morebstars:
-            gstars.append(stars((255,255,255),"badstar.png",[random.randrange(0,600),random.randrange(-150,-50)], "bad"))
+            gstars.append(stars((255,255,255),"badstar.png",[random.randrange(0,560),random.randrange(-150,-50)], "bad"))
 
             gstars.append(stars((255,255,255),"badstar.png",[random.randrange(600,1160),random.randrange(-150,-50)], "bad"))
-            morebstars += 5
+            morebstars += 7
             
       
         if score == moreStars:
-            gstars.append(stars((255,255,255),"star.png",[random.randrange(0,600),random.randrange(-150,-50)], "good"))
+            gstars.append(stars((255,255,255),"star.png",[random.randrange(0,560),random.randrange(-150,-50)], "good"))
 
             gstars.append(stars((255,255,255),"star.png",[random.randrange(600,1160),random.randrange(-150,-50)], "good"))
             moreStars += 5
@@ -148,13 +151,17 @@ def play():
             if(pygame.sprite.collide_rect(player1, gstars[i]) or pygame.sprite.collide_rect(player2, gstars[i])):
                 screen.blit(background,(gstars[i].rect.x, gstars[i].rect.y-5),(gstars[i].rect.x, gstars[i].rect.y-5, 70, 70))
                 gstars[i].location[1] = -150
+                if i%2 == 0:
+                	gstars[i].location[0] = random.randrange(0,560)
+               	else:
+               		gstars[i].location[0] = random.randrange(600, 1160)
                 if gstars[i].attribute == "good":
                     score +=1
                 if gstars[i].attribute == "bad":
                     lives -=1
                 gstars[i].update()
                 continue
-            if gstars.index(x)%2 == 0:
+            if i%2 == 0:
                 gstars[i].fallingStar(speed)
                 gstars[i].update()
                 screen.blit(background,(gstars[i].rect.x, gstars[i].rect.y-5),(gstars[i].rect.x, gstars[i].rect.y-5, 70, 70))
@@ -167,18 +174,21 @@ def play():
     
         screen.blit(background,(player1.rect.x-10,player1.rect.y),(player1.rect.x-10,player1.rect.y,85,120))
         screen.blit(background,(player2.rect.x-10,player2.rect.y),(player2.rect.x-10,player2.rect.y, 85,120))
-        screen.blit(background,(0,0),(0,0,300, 100))
         screen.blit(seesaw,seesawrec)
         screen.blit(player1.image,player1)
-        screen.blit(player2.image,player2)   
-        screen.blit(scorewrite, (20,20))  
-        screen.blit(liveswrite,(610,745))
+        screen.blit(player2.image,player2)
+        screen.blit(background, (0, 0), (0, 0, 300, 75))
+    	screen.blit(scorewrite, (20,20))  
+    	screen.blit(background, (950, 20), (950, 20, 250, 50))
+    	screen.blit(liveswrite,(950,20))
     
         pygame.display.update()
 
         player1.move(1)
         player2.move(2)
     
+    	count+=1
+
         for event in pygame.event.get():
             if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
                 EndGame = 1
