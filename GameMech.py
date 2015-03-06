@@ -2,13 +2,16 @@ import pygame, os, random
 from pygame.locals import *
 pygame.init()
 
-screen = pygame.display.set_mode([1200,800])
+screen = pygame.display.set_mode([1200,700])
 font=pygame.font.SysFont("Courier New", 46)
 fps=10
 score=0
 lives=5
 
 class Player(pygame.sprite.Sprite):
+    distance = 0.0
+    print distance
+    width = 0
     def __init__(self, filename, width, height, location):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load(filename).convert_alpha()
@@ -18,25 +21,30 @@ class Player(pygame.sprite.Sprite):
         self.height=height
                     
         self.rect = self.image.get_rect()
-
-        self.rect.x = location[0]
+        self.x = location[0]
+        self.rect.x = self.x
         self.rect.y = location[1]
+        self.width = width
+        self.distance = self.x-600+(self.width/2)
 
     def move(self, player):
         key_pressed=pygame.key.get_pressed()
         
         if player==2:
             if self.rect.x>605 and key_pressed[K_LEFT]:
-                self.rect.x-=10
+                self.x-=5
         if player==1:
             if self.rect.x>0 and key_pressed[K_a]:
-                self.rect.x-=10
+                self.x-=5
         if player==2:
             if self.rect.x<1200-self.width and key_pressed[K_RIGHT]:
-                self.rect.x+=10
+                self.x+=5
         if player==1:
             if self.rect.x<553 and key_pressed[K_d]:
-                self.rect.x+=10
+                self.x+=5
+
+        self.distance = self.x-600+(self.width/2)
+        self.rect.x = self.x
     
 
 class stars(pygame.sprite.Sprite):
@@ -50,7 +58,7 @@ class stars(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (60,60))
         
         self.rect = self.image.get_rect()
-        #assigns x and y components to location of pac-man image
+        #assigns x and y components to location of star image
         self.location = location
         self.rect.x = location[0]
         self.rect.y = location[1]
@@ -64,7 +72,7 @@ class stars(pygame.sprite.Sprite):
             self.location[0] = random.randrange(0,560)
             #self.counter += 1
 
-        #randomly assigns fruit a new coordinate
+        #randomly assigns star a new coordinate
         else:
             self.location[1] = self.location[1] + speed
             
@@ -74,7 +82,7 @@ class stars(pygame.sprite.Sprite):
             self.location[0] = random.randrange(560,1160)
             #self.counter += 1
             
-        #randomly assigns fruit a new coordinate
+        #randomly assigns star a new coordinate
         else:
             self.location[1] = self.location[1] + speed
     #updates screen images so you can see movement of objects
@@ -85,21 +93,37 @@ class stars(pygame.sprite.Sprite):
         #draws an extra star
         #screen.blit(self.image, self)
 
+class SeeSaw(pygame.sprite.Sprite):
+    direction = 0
+    def __init__(self, location):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("SeeSaw.jpg").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (1200,10))
+        self.origImage = self.image
+                    
+        self.rect = self.image.get_rect()
 
+        self.rect.x = location[0]
+        self.rect.y = location[1]
 
-def collide(obj1, obj2):
-    if pygame.sprite.collide_rect(obj1, obj2):
-        return True
+    def rotation(self, amount):
+        print amount
+        origCenter = self.rect.center
+        self.direction += amount
+        self.image = pygame.transform.rotate(self.origImage, self.direction)
+        self.rect = self.image.get_rect()
+        self.rect.center = origCenter
 
 
 def play():
-    player1=Player("stickfigure.png", 66,120,(275,525))
-    player2=Player("stickfigure2.png", 66,120,(900,525))
-
+    player1=Player("stickfigure.png", 66,120,(275.0,475.0))
+    player2=Player("stickfigure2.png", 66,120,(900.0,475.0))
+    gap = player2.distance+player1.distance
+    print gap
     background=pygame.image.load("BackgroundTest.png")
+    background = pygame.transform.scale(background, (1200, 750))
     backgroundrec=background.get_rect() 
-    seesaw=pygame.image.load("SeeSawHorizontal.png")
-    seesawrec=seesaw.get_rect()
+    seesaw=SeeSaw((0,585))
     speed = 1.5
     GameOver = 0
     n = 1
@@ -115,10 +139,15 @@ def play():
 
 
     while EndGame==0: 
+        gap = player2.distance+player1.distance
+        print gap
+        if abs(gap)>25:
+            seesaw.rotation(-(gap/5000))
         global lives
-        global score   
+        global score
         if lives == 0:
             EndGame = 1
+            return
 
     	scoretext="SCORE: " + str(score)
     	scorewrite=font.render(scoretext, 1, [0,0,0])
@@ -174,7 +203,9 @@ def play():
     
         screen.blit(background,(player1.rect.x-10,player1.rect.y),(player1.rect.x-10,player1.rect.y,85,120))
         screen.blit(background,(player2.rect.x-10,player2.rect.y),(player2.rect.x-10,player2.rect.y, 85,120))
-        screen.blit(seesaw,seesawrec)
+        screen.blit(background,(seesaw.rect.x-10, seesaw.rect.y-10), 
+            (seesaw.rect.x-10, seesaw.rect.y-10, seesaw.rect.width+20, seesaw.rect.height+20))
+        screen.blit(seesaw.image, seesaw)
         screen.blit(player1.image,player1)
         screen.blit(player2.image,player2)
         screen.blit(background, (0, 0), (0, 0, 300, 75))
@@ -192,4 +223,5 @@ def play():
         for event in pygame.event.get():
             if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
                 EndGame = 1
+                return
 

@@ -4,7 +4,7 @@ import GameMech
 
 pygame.init()
 
-screen = pygame.display.set_mode([1200,800])
+screen = pygame.display.set_mode([1200,700])
 font=pygame.font.SysFont("Courier New", 46)
 font2=pygame.font.SysFont("Courier New", 32)
 screen.fill([250,250,250])
@@ -42,4 +42,6 @@ def menu():
                 GameMech.play()
             menu()
  
-menu()       
+
+if __name__ == '__main__':
+    menu()    
