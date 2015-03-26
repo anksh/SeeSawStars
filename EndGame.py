@@ -9,7 +9,7 @@ font2 = pygame.font.SysFont("Courier New", 36)
 font.set_bold(True)
 
 def GameOver(typeOf):
-	print "yoyo"
+	# print "yoyo"
 	text1 = "GAME OVER"
 	text2 = "Press any key to return to the main menu"
 	text3 = "You ran out of lives!"

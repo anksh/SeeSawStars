@@ -58,7 +58,7 @@ def menu():
             if location[0]>700 and location[0]<1150 and location[1]>100 and location[1]<275:
                 x = GameMech.play(level)
                 endgame = 3
-                print "hi"
+                # print "hi"
             else:
                 endgame = 0
         

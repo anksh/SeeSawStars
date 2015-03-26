@@ -259,8 +259,8 @@ def play(level):
             # global score
             # global lives
             lives = 5
-            # score = 0
-            # return -1
+            score = 0
+            return -1
 
     	scoretext="SCORE:" + str(score)
     	scorewrite=font.render(scoretext, 1, [0,0,0])
@@ -360,10 +360,10 @@ def play(level):
                 	offscreenStars = 0
                 	transition = 0
                 	correct_tuple = phrases(numPhrases)
-                	print correct_tuple
+                	# print correct_tuple
                 	correct_left = ACTIONS_DICT[correct_tuple[0]]
                 	correct_right = ACTIONS_DICT[correct_tuple[1]]
-                	print time.time()-t0
+                	# print time.time()-t0
                 	t0 = time.time()
                     
     
@@ -393,9 +393,9 @@ def play(level):
         
         if abs(seesaw.direction) >= 15:
 			lives = 5
-			# score = 0
+			score = 0
 			# EndGame = 1
-			# return -2
+			return -2
 
         for event in pygame.event.get():
             if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
