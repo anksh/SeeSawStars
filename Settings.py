@@ -8,9 +8,6 @@ screen = pygame.display.set_mode([1200,700])
 def settingsMenu():
 	background = pygame.image.load("SettingsScreen.png")
 	backgroundrec = background.get_rect()
-	# settingsFile = open("settings.txt", "wb")
-	# settingsFile.write("Background.png")
-	# settingsFile.close()
 	while True:
 		screen.blit(background, backgroundrec)
 		pygame.display.update()
@@ -21,6 +18,9 @@ def settingsMenu():
 				location = pygame.mouse.get_pos()
 				if location[1] > 270 and location[1] < 586:
 					if location[0] > 91 and location[0] < 305:
+						settingsFile = open("settings.txt", "wb")
+						settingsFile.write("Background.png")
+						settingsFile.close()
 						return
 					if location[0] > 493 and location[0] < 707:
 						settingsFile = open("settings.txt", "wb")

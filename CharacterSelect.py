@@ -52,73 +52,73 @@ def characterselect():
                 p1option="FinalSpritev2RedCap.png"
                 EndGame=0
                 screen.blit(background,backgroundrec)
-            if location[0]>209 and location[0]<278 and location[1]>60 and location[1]<176:
+            elif location[0]>209 and location[0]<278 and location[1]>60 and location[1]<176:
                 p1x=209
                 p1y=60
                 p1option="FinalSpritev2NoHair.png"
                 EndGame=0
                 screen.blit(background,backgroundrec)
-            if location[0]>392 and location[0]<468 and location[1]>60 and location[1]<176:
+            elif location[0]>392 and location[0]<468 and location[1]>60 and location[1]<176:
                 p1x=392
                 p1y=60
                 p1option="FinalSpritev2GreenMohawk.png"
                 EndGame=0
                 screen.blit(background,backgroundrec)
-            if location[0]>606 and location[0]<672 and location[1]>60 and location[1]<176:
+            elif location[0]>606 and location[0]<672 and location[1]>60 and location[1]<176:
                 p1x=606
                 p1y=60
                 p1option="FinalSpritev2BlueCap.png"
                 EndGame=0
                 screen.blit(background,backgroundrec)
-            if location[0]>830 and location[0]<900 and location[1]>60 and location[1]<176:
+            elif location[0]>830 and location[0]<900 and location[1]>60 and location[1]<176:
                 p1x=830
                 p1y=60
                 p1option="FinalSpritev2Blonde.png"
                 EndGame=0
                 screen.blit(background,backgroundrec)
-            if location[0]>1070 and location[0]<1142 and location[1]>60 and location[1]<176:
+            elif location[0]>1070 and location[0]<1142 and location[1]>60 and location[1]<176:
                 p1x=1070
                 p1y=60
                 p1option="FinalSpritev2Basket.png"
                 EndGame=0
                 screen.blit(background,backgroundrec)
-            if location[0]>32 and location[0]<100 and location[1]>383 and location[1]<546:
+            elif location[0]>32 and location[0]<100 and location[1]>383 and location[1]<546:
                 p2x=32
                 p2y=383
                 p2option="FinalSpritev2RedCap.png"
                 EndGame=0
                 screen.blit(background,backgroundrec)
-            if location[0]>201 and location[0]<262 and location[1]>396 and location[1]<546:
+            elif location[0]>201 and location[0]<262 and location[1]>396 and location[1]<546:
                 p2x=201
                 p2y=396
                 p2option="FinalSpritev2NoHair.png"
                 EndGame=0
                 screen.blit(background,backgroundrec)
-            if location[0]>399 and location[0]<462 and location[1]>390 and location[1]<546:
+            elif location[0]>399 and location[0]<462 and location[1]>390 and location[1]<546:
                 p2x=399
                 p2y=390
                 p2option="FinalSpritev2GreenMohawk.png"
                 EndGame=0
                 screen.blit(background,backgroundrec)
-            if location[0]>607 and location[0]<684 and location[1]>398 and location[1]<546:
+            elif location[0]>607 and location[0]<684 and location[1]>398 and location[1]<546:
                 p2x=607
                 p2y=398
                 p2option="FinalSpritev2BlueCap.png"
                 EndGame=0
                 screen.blit(background,backgroundrec)
-            if location[0]>842 and location[0]<900 and location[1]>398 and location[1]<546:
+            elif location[0]>842 and location[0]<900 and location[1]>398 and location[1]<546:
                 p2x=842
                 p2y=398
                 p2option="FinalSpritev2Blonde.png"
                 EndGame=0
                 screen.blit(background,backgroundrec)
-            if location[0]>1081 and location[0]<1142 and location[1]>396 and location[1]<546:
+            elif location[0]>1081 and location[0]<1142 and location[1]>396 and location[1]<546:
                 p2x=1081
                 p2y=396
                 p2option="FinalSpritev2Basket.png"
                 EndGame=0
                 screen.blit(background,backgroundrec)
-            if location[0]>900 and location[0]<1140 and location[1]>590 and location[1]<690:
+            elif location[0]>900 and location[0]<1140 and location[1]>590 and location[1]<690:
                 charFile=open("characters.txt","wb")
                 charFile.write(p1option)
                 charFile.write("\n")
@@ -132,5 +132,7 @@ def characterselect():
                 option = LevelSelect.selectLevel()
                 if option <=0:
                     return
-            if location[0]>50 and location[0]<260 and location[1]>590 and location[1]<690:
+            elif location[0]>50 and location[0]<260 and location[1]>590 and location[1]<690:
                 return
+            else:
+                EndGame = 0
