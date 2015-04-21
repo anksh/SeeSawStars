@@ -16,8 +16,17 @@ alarm = 15
 transition = 0
 font_phrases=pygame.font.SysFont("Courier New", 25)
 font_phrases.set_bold(True)
-left_write = font_phrases.render(" ", 1,[0,0,0])
-right_write = font_phrases.render(" ",1,[0,0,0])
+left_write = font_phrases.render(" ", 1, [0,0,0])
+right_write = font_phrases.render(" ",1, [0,0,0])
+
+
+global cheattext1
+cheattext1 = "No tip"
+global cheattext2
+cheattext2 = "Reach for the stars"
+global cheattext3
+cheattext3 = "Dr.Chesney never loses"
+
 
 ACTIONS = [' is happy.', ' is sad.', ' found his favorite hat.', ' lost his favorite hat.', 
                 ' received a birthday present.', ' fell off his bike.',
@@ -107,23 +116,17 @@ class stars(pygame.sprite.Sprite):
         while not clear:
             startOver = False
             for x in range(len(starsList)):
-                print "here"
                 if (starsList[x] is self):
-                    print "same"
                     continue
                 if pygame.sprite.collide_rect(self, starsList[x]):
-                    print "gotem"
                     # 1 is the left hand side, 2 is the right hand side
                     if(screenLoc == 1):
-                        print "left"
                         self.location[0] = random.randrange(0,520)
                         self.rect.x = self.location[0]
                     if(screenLoc == 2):
-                        print "right"
                         self.location[0] = random.randrange(600,1100)
                         self.rect.x = self.location[0]
                     startOver = True
-            print " "
             if (not startOver):
                 clear = True
 
@@ -171,6 +174,7 @@ class stars(pygame.sprite.Sprite):
             self.checkOverlap(starsList, 2)
         else:
             self.location[1] = self.location[1] + speed
+
     #updates screen images so you can see movement of objects
     def update(self):
         # print "updating"
@@ -181,12 +185,12 @@ class stars(pygame.sprite.Sprite):
             self.isOnScreen = True
         else:
             self.isOnScreen = False
-        #draws an extra star
-        #screen.blit(self.image, self)
+
 
 class SeeSaw(pygame.sprite.Sprite):
     direction = 0.0
     amount = 0.0
+
     def __init__(self, location):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("SeeSaw.jpg").convert_alpha()
@@ -202,17 +206,30 @@ class SeeSaw(pygame.sprite.Sprite):
     def rotation(self, amount):
         # print amount
         # print self.direction
-        self.amount = amount
-        origCenter = self.rect.center
-        self.direction += amount
-        self.image = pygame.transform.rotate(self.origImage, self.direction)
-        self.rect = self.image.get_rect()
-        self.rect.center = origCenter
+        fr = open("cheatfile.txt", "rb")
+        cheattxt = fr.readline()
+        #Cases do not matter
+        if (cheattxt.lower() == cheattext1.lower() or cheattxt.lower() == cheattext3.lower()):
+            self.amount = amount
+            origCenter = self.rect.center
+            self.direction = self.direction
+            self.image = self.image 
+            self.rect = self.image.get_rect()
+            self.rect.center = origCenter
+            
+        else:
+            self.amount = amount
+            origCenter = self.rect.center
+            self.direction += amount
+            self.image = pygame.transform.rotate(self.origImage, self.direction)
+            self.rect = self.image.get_rect()
+            self.rect.center = origCenter
+
         # print self.direction
         #print self.rect.x
         #print self.rect.y
-
-def phrases(phrase_num):
+        fr.close()
+def phrases(phrase_num, color):
     global left_write
     global right_write
 #     global font_phrases
@@ -222,16 +239,29 @@ def phrases(phrase_num):
 
     phrase_left = left_name + actions_tuple[0]
     phrase_right = right_name + actions_tuple[1]
-    left_write = font_phrases.render(phrase_left, 1, [0,0,0])
-    right_write = font_phrases.render(phrase_right,1,[0,0,0])
+    left_write = font_phrases.render(phrase_left, 1, color)
+    right_write = font_phrases.render(phrase_right,1,color)
     return actions_tuple
 
 def play(level):
-    player1=Player("FinalSpritev2GreenMohawk.png", 66,120,(240.0,475.0))
-    player2=Player("FinalSpritev2Basket.png", 66,120,(900.0,475.0))
+    #initializing players
+    file=open("characters.txt", "rb")
+    p1option=file.readline().rstrip()
+    p2option=file.readline().rstrip()
+    file.close()
+    player1=Player(p1option, 66,120,(240.0,475.0))
+    player2=Player(p2option, 66,120,(900.0,475.0))
     gap = player2.distance+player1.distance
-    # print gap
-    background=pygame.image.load("Background.png")
+
+    #initializing background
+    file = open("settings.txt", "rb")
+    bkgfile = file.readline().strip()
+
+    if bkgfile == "StarryBackground.png":
+        fontColor = [255,255,255]
+    else:
+        fontColor = [0,0,0]
+    background=pygame.image.load(bkgfile)
     background = pygame.transform.scale(background, (1200, 700))
     backgroundrec=background.get_rect() 
     seesaw=SeeSaw((0.0,585.0))
@@ -244,9 +274,10 @@ def play(level):
     EndGame=0
     starslimit = 1
     offscreenStars = 0
+    blitAfter = False
 
     levelTxt = "Level: " + str(level)
-    writeLvl = levelFont.render(levelTxt, 1, [0,0,0])
+    writeLvl = levelFont.render(levelTxt, 1, fontColor)
     if level == 1:
         numPhrases = 2
     elif level == 2:
@@ -255,11 +286,11 @@ def play(level):
         numPhrases = 10
 
     global transition
-    correct_tuple = phrases(numPhrases)
+    correct_tuple = phrases(numPhrases, fontColor)
     correct_left = ACTIONS_DICT[correct_tuple[0]]
     correct_right = ACTIONS_DICT[correct_tuple[1]]
-    # print correct_left
-    # print correct_right
+    
+    #initializing the stars
     for x in range(0,4):
         if x%2:
             lstars.append(stars((255,255,255),"HappyStar.png",
@@ -277,11 +308,19 @@ def play(level):
             rstars[x].checkOverlap(rstars, 2)
 
     screen.blit(background,backgroundrec)
-    global left_write, right_write
+
+    #initializing sounds
+    correctSound = pygame.mixer.Sound("correct.wav")
+    wrongSoung = pygame.mixer.Sound("error.wav")
+
+    global left_write
+    global right_write
+
     global t0
     t0 = time.time()
     t1 = t0
 
+    #changing the time the phrases have on screen
     global alarm
     if level < 8:
         alarm-=level/2
@@ -300,6 +339,8 @@ def play(level):
             seesaw.rotation(-(gap/(3500-(level-1)*1000)))
         else:
             seesaw.amount = 0.0
+
+    
         global lives
         global score
         if lives == 0:
@@ -351,6 +392,11 @@ def play(level):
         screen.blit(background,(seesaw.rect.x-10, seesaw.rect.y-10), 
             (seesaw.rect.x-10, seesaw.rect.y-10, seesaw.rect.width+20, seesaw.rect.height+20))
         screen.blit(seesaw.image, seesaw)
+        
+        if blitAfter == True:
+            screen.blit(background, ((1200-writeWarning.get_width())/2, 200),
+                        ((1200-writeWarning.get_width())/2, 200, writeWarning.get_width(), writeWarning.get_height()))
+            blitAfter = False
 
         offscreenStars = 0
         for x in range(0,starslimit):
@@ -363,8 +409,17 @@ def play(level):
 
                 if lstars[x].attribute == correct_left:
                     score +=1
+                    correctSound.play()
                 else:
-                    lives -=1
+                    wrongSoung.play()
+                    fr = open("cheatfile.txt", "rb")
+                    cheattxt2 = fr.readline()
+                    #Cases do not matter
+                    if (cheattxt2.lower() == cheattext2.lower() or cheattxt2.lower() == cheattext3.lower()) :
+                        lives +=0
+                    else:
+                        lives -=1
+                    fr.close()    
                 lstars[x].update()
                 j = random.randrange(0,len(ATTRIBUTES))
                 lstars[x].attribute = ATTRIBUTES[j]
@@ -380,8 +435,19 @@ def play(level):
                 rstars[x].checkOverlap(rstars, 2)   
                 if rstars[x].attribute == correct_right:
                     score +=1
+                    score +=1
+                    correctSound.play()
                 else:
-                    lives -=1
+                    wrongSoung.play()
+                    fr = open("cheatfile.txt", "rb")
+                    cheattxt2 = fr.readline()
+                    #Cases do not matter
+                    if (cheattxt2.lower() == cheattext2.lower() or cheattxt2.lower() == cheattext3.lower()) :
+                        lives +=0
+                    else:
+                        lives -=1
+                    fr.close()
+                    
                 rstars[x].update()
                 j = random.randrange(0,len(ATTRIBUTES))
                 rstars[x].attribute = ATTRIBUTES[j]
@@ -395,6 +461,13 @@ def play(level):
             rstars[x].fallingStar2(speed,rstars)
             rstars[x].update()
             screen.blit(rstars[x].image, rstars[x])
+            
+            
+            if abs(seesaw.direction) > 8.5:
+                warning = "Watch the Seesaw!"
+                writeWarning = levelFont.render(warning, 1, fontColor) 
+                screen.blit(writeWarning, ((1200-writeWarning.get_width())/2, 200)) 
+                blitAfter = True
             
 #             global alarm
 #             if time.time()-t0 >= alarm:
@@ -414,7 +487,7 @@ def play(level):
                 if offscreenStars == 2*starslimit:
                     offscreenStars = 0
                     transition = 0
-                    correct_tuple = phrases(numPhrases)
+                    correct_tuple = phrases(numPhrases, fontColor)
                     # print correct_tuple
                     correct_left = ACTIONS_DICT[correct_tuple[0]]
                     correct_right = ACTIONS_DICT[correct_tuple[1]]

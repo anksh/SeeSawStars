@@ -15,12 +15,12 @@ def selectLevel():
 	while True:
 		for event in pygame.event.get():
 			if event.type == QUIT or (event.type == KEYDOWN and K_ESCAPE):
-				return
+				return -1
 			if event.type == MOUSEBUTTONDOWN:
 				location = pygame.mouse.get_pos()
 				if location[1] > 575 and location[1] < 675:
 					if location[0] > 490 and location[0] < 710:
-						return
+						return 1
 				if location[1] > 300 and location[1] < 500:
 					if location[0] > 25 and location[0] < 375:
 						option = GameMech.play(1)
@@ -35,13 +35,13 @@ def selectLevel():
 		if enteredGame:
 			if option == 0:
 				enteredGame = False
-				return
+				return 0
 			if option > 0:
 				option = GameMech.play(option+1)
 			if option < 0:
 				EndGame.GameOver(option)
 				enteredGame = False
-				return
+				return 0
 				
 		if not enteredGame:
 			screen.blit(background, backgroundrec)
